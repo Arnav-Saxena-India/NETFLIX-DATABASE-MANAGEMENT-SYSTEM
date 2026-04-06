@@ -1,0 +1,175 @@
+================================================================================
+       APERTURE OTT MANAGEMENT SYSTEM — Setup & Run Guide
+================================================================================
+
+PREREQUISITES
+─────────────
+Make sure these are installed on your machine before starting:
+
+  1. Python 3.10 or higher      →  https://www.python.org/downloads/
+  2. Node.js 18 or higher       →  https://nodejs.org/
+  3. MySQL 8.0 or higher        →  https://dev.mysql.com/downloads/
+  4. Git (optional, for cloning) →  https://git-scm.com/
+
+
+================================================================================
+STEP 1 — SET UP THE DATABASE
+================================================================================
+
+  1. Open MySQL (via terminal, MySQL Workbench, or any client).
+
+  2. Create the database:
+
+         CREATE DATABASE ott_db;
+
+  3. Import the schema (creates all tables):
+
+         mysql -u root -p ott_db < db/schema.sql
+
+  4. Import the seed data (populates sample data):
+
+         mysql -u root -p ott_db < db/seed.sql
+
+     (Or copy-paste the contents of those files into your MySQL client.)
+
+
+================================================================================
+STEP 2 — SET UP THE BACKEND (FastAPI + Python)
+================================================================================
+
+  1. Open a terminal and navigate to the backend folder:
+
+         cd backend
+
+  2. (Recommended) Create a virtual environment:
+
+         python -m venv venv
+
+     Activate it:
+       - Windows:   venv\Scripts\activate
+       - macOS/Linux: source venv/bin/activate
+
+  3. Install Python dependencies:
+
+         pip install -r requirements.txt
+
+  4. Configure your database connection:
+
+     By default the app connects to:
+         mysql+pymysql://root:password@localhost/ott_db
+
+     If your MySQL password is different from "password", set
+     the environment variable BEFORE starting the server:
+
+       - Windows (CMD):
+             set DB_URL=mysql+pymysql://root:YOUR_PASSWORD@localhost/ott_db
+
+       - Windows (PowerShell):
+             $env:DB_URL="mysql+pymysql://root:YOUR_PASSWORD@localhost/ott_db"
+
+       - macOS/Linux:
+             export DB_URL="mysql+pymysql://root:YOUR_PASSWORD@localhost/ott_db"
+
+  5. Start the backend server:
+
+         uvicorn app.main:app --reload --port 8000
+
+     You should see:  Uvicorn running on http://127.0.0.1:8000
+     API docs are at: http://localhost:8000/docs
+
+
+================================================================================
+STEP 3 — SET UP THE FRONTEND (React + Vite)
+================================================================================
+
+  1. Open a NEW terminal and navigate to the frontend folder:
+
+         cd frontend
+
+  2. Install Node.js dependencies:
+
+         npm install
+
+  3. Start the development server:
+
+         npm run dev
+
+     You should see:  Local: http://localhost:5173/
+
+  4. Open your browser and go to:
+
+         http://localhost:5173
+
+
+================================================================================
+QUICK-START SUMMARY (TL;DR)
+================================================================================
+
+  Terminal 1 (Backend):
+  ─────────────────────
+    cd backend
+    python -m venv venv
+    venv\Scripts\activate          (Windows) or source venv/bin/activate
+    pip install -r requirements.txt
+    set DB_URL=mysql+pymysql://root:YOUR_PASSWORD@localhost/ott_db
+    uvicorn app.main:app --reload --port 8000
+
+  Terminal 2 (Frontend):
+  ──────────────────────
+    cd frontend
+    npm install
+    npm run dev
+
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+  Problem: "pip" or "python" not recognized
+  Fix:     Make sure Python is added to your system PATH.
+
+  Problem: "npm" not recognized
+  Fix:     Make sure Node.js is added to your system PATH.
+
+  Problem: Backend can't connect to MySQL
+  Fix:     1. Ensure MySQL service is running.
+           2. Verify your DB_URL has the correct username/password.
+           3. Make sure the database "ott_db" exists.
+
+  Problem: Frontend shows network/connection errors
+  Fix:     Make sure the backend is running on port 8000 first.
+
+  Problem: Port 8000 or 5173 already in use
+  Fix:     Kill the process using that port, or change the port:
+             uvicorn app.main:app --reload --port 8001
+             npm run dev -- --port 5174
+
+
+================================================================================
+PROJECT STRUCTURE
+================================================================================
+
+  proj new/
+  ├── backend/               ← FastAPI backend (Python)
+  │   ├── app/
+  │   │   ├── main.py        ← Entry point
+  │   │   ├── database.py    ← DB connection config
+  │   │   ├── models/        ← SQLAlchemy models
+  │   │   ├── routers/       ← API route handlers
+  │   │   └── schemas/       ← Pydantic request/response schemas
+  │   └── requirements.txt   ← Python dependencies
+  │
+  ├── frontend/              ← React + Vite frontend
+  │   ├── src/
+  │   │   ├── components/    ← Reusable UI components
+  │   │   └── pages/         ← Page-level views
+  │   └── package.json       ← Node.js dependencies
+  │
+  ├── db/
+  │   ├── schema.sql         ← Database table definitions
+  └── seed.sql           ← Sample data
+  
+ 
+
+
+================================================================================

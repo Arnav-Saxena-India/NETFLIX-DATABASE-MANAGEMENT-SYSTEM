@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #131313;
+  --color-surface: #201f1f;
+  --color-primary: #e50914;
+  --color-secondary: #ffb4aa;
+  --color-tertiary: #a7c8ff;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: #dee5ff;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@utility glass-panel {
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid color-mix(in srgb, white 5%, transparent);
+  border-radius: 0.75rem;
+}
